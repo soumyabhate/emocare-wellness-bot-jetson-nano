@@ -110,9 +110,8 @@ DEBUG=false
 ### 1) Streamlit UI
 ```powershell
 # Windows (with venv activated)
-python -m streamlit run Bot.py
-# or
-python -m streamlit run Yipeeeee.py
+python -m streamlit run bot.py (name of your file)
+
 ```
 > If it says “`streamlit` not recognized”, you’re not using the venv or it’s not installed. Run:
 > `pip install streamlit` and use `python -m streamlit ...`.
