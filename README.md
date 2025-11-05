@@ -1,6 +1,6 @@
 # EmoCare Therapy Bot 🧠💬🎧
 
-> **Status:** Components are currently **not connected**. Each file works **separately**.  
+> **Status:** Components are currently **not connected** end‑to‑end. Each file works **separately**.  
 > **Next step:** **Integrate** voice recording → STT → LLM → TTS → Streamlit UI into one flow. 🚀
 
 ---
@@ -171,6 +171,19 @@ print(text)
 
 ---
 
+## Jetson Validation Summary ✅ (evidence-style)
+
+- **Audio I/O:** Recorded **16kHz mono** WAV on Jetson via `arecord`; verified with `ffprobe`.  
+- **Local STT:** Transcribed on-device using **Vosk** (CPU). Output captured as `TRANSCRIPT: ...`.  
+- **LLM/TTS (Hybrid):** Sent transcript to **Groq** for response and generated speech via **ElevenLabs**; saved `avatar_output.mp3`.  
+- **UI:** Launched **Streamlit** (`bot_ui.py`) on Jetson (`:8501`) and accessed over LAN.  
+- **Latency (sample):** Logged per-stage times (STT / LLM / TTS / total) for a short clip.  
+- **Camera:** Enumerated using `v4l2-ctl`; live preview verified. *(Object detection planned via YOLO/TensorRT.)*
+
+> Artifacts to attach when submitting: `input.wav`, `avatar_output.mp3`, terminal screenshots (`arecord -l`, `v4l2-ctl --list-devices`, `ffmpeg -version`, `TRANSCRIPT: ...`, latency line), Streamlit page capture.
+
+---
+
 ## Next step to do 🚀
 
 ### 1) Connect Everything (E2E pipeline) 🔗  
@@ -213,14 +226,14 @@ print(text)
 ---
 
 ### 4) Jetson Object Detection (camera) 📷🟦  
-**Goal:** Optional context-aware cues (e.g., detect person presence, objects) via Jetson camera input.  
+**Goal:** Optional context-aware cues (e.g., detect person presence/objects) via Jetson camera input.  
 **Design (theoretical):**  
-- **Capture:** CSI (Raspberry Pi cam) or USB webcam using `v4l2`/GStreamer.  
+- **Capture:** CSI or USB webcam using `v4l2`/GStreamer.  
 - **Model:** TensorRT-optimized **YOLO** (e.g., YOLOv5n/YOLOv8n) or NVIDIA **DetectNet** sample.  
 - **Pipeline:** Camera → inference (TensorRT) → bounding boxes → lightweight events to Streamlit (e.g., “person detected”) to adapt bot UX.  
-- **Performance notes:** Use **n**/**nano** variants, FP16/INT8 (calibrated) for real-time; lower resolution (640×480) for Nano.  
-- **Security:** Do on-device inference; don’t transmit frames by default.  
-**Acceptance criteria:** Live camera preview + object labels at ≥10 FPS on-board; events optionally influence prompts (“user present”, “distraction detected”).
+- **Performance:** Use **n/nano** variants, FP16/INT8 for real-time; 640×480 on Nano.  
+- **Security:** On-device inference; don’t transmit frames by default.  
+**Acceptance criteria:** Live camera preview + labels at ≥10 FPS; events optionally alter prompts (“user present”, “distraction detected”).
 
 ---
 
