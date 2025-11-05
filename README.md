@@ -219,16 +219,11 @@ python record_test.py
 
 ---
 
-## 📄 License
-
-Add your preferred license (MIT recommended for open projects).
-
----
-
 ## 🙏 Acknowledgements
 
 - Streamlit team for the rapid UI framework  
-- ElevenLabs for TTS  
+- ElevenLabs for TTS
+- Groq for STT
 - Groq for LLM infra  
 - Open-source contributors of `SpeechRecognition`, `PyAudio`, `sounddevice`
 
