@@ -26,11 +26,10 @@ EmoCare Therapy Bot/
 ├─ .env                        # Your secrets (not committed) – optional
 ├─ README.md                   # This file
 ├─ requirements.txt            # Python dependencies
-├─ Bot.py                      # Streamlit app (primary UI)
-├─ Yipeeeee.py                 # Alternate Streamlit prototype (exported notebook)
+├─ bot.py                      # Main LLM workflow (renamed from Yipeeeee.py); may include Streamlit UI sections
+├─ bot_ui.py                   # Alternate/minimal Streamlit UI shell
 ├─ streamlit.ipynb             # Notebook used to design UI
 ├─ record_test.py              # Mic → WAV recorder & playback test
-├─ Voice_Recorder_Setup...     # (if present) extra recording helpers / scripts
 ├─ avatar_output.mp3           # Sample output audio
 ├─ soumya_input.mp3            # Sample input audio
 └─ (others)                    # e.g., __pycache__, assets, etc.
@@ -44,7 +43,7 @@ EmoCare Therapy Bot/
 
 - **Frontend:** Streamlit 🖥️  
 - **Audio I/O:** `sounddevice`, `PyAudio` 🎙️  
-- **STT (Speech-to-Text):** `SpeechRecognition` (mic or WAV) 🗣️→📝  
+- **STT (Speech-to-Text):** `SpeechRecognition` (file/mic) 🗣️→📝  
 - **LLM (reasoning):** Groq API (planned) 🤖  
 - **TTS (Text-to-Speech):** ElevenLabs API (planned) 📝→🔊  
 - **Utils:** `ffmpeg-python`, `python-dotenv`, `numpy`, `scipy`
@@ -110,8 +109,9 @@ DEBUG=false
 ### 1) Streamlit UI
 ```powershell
 # Windows (with venv activated)
-python -m streamlit run bot.py (name of your file)
-
+python -m streamlit run bot.py
+# or
+python -m streamlit run bot_ui.py
 ```
 > If it says “`streamlit` not recognized”, you’re not using the venv or it’s not installed. Run:
 > `pip install streamlit` and use `python -m streamlit ...`.
@@ -157,26 +157,84 @@ print(text)
 
 ---
 
+## Preliminary Project Results
+
+- **Running Model:** Using hosted APIs only (STT via `SpeechRecognition`, LLM via Groq, TTS via ElevenLabs). **Local on-device model:** **not done yet**.  
+- **Weights Loaded:** No local weights (providers manage them). **Local weights load/management:** **not done yet**.  
+- **Inference:** Modules tested **individually** (record → WAV, LLM reply in `bot.py`, TTS → `avatar_output.mp3`). **End-to-end chaining in one Streamlit app:** **not done yet**.  
+- **Predictions/Outputs:**  
+  - STT → transcript (via file path; live mic path depends on PyAudio) — **partial**  
+  - LLM → text reply — **done**  
+  - TTS → MP3 saved (`avatar_output.mp3`) — **done**  
+- **Speed:** Latency measurements (STT / LLM / TTS / E2E) **not done yet**.  
+- **Metrics Used:** WER (STT), latency, MOS-lite (TTS), UX measures — **not done yet**.
+
+---
+
+## Next step to do 🚀
+
+### 1) Connect Everything (E2E pipeline) 🔗  
+**Goal:** One-click flow inside Streamlit: **Record → STT → LLM → TTS → Play**  
+**Design (theoretical):**  
+- **Capture:** Browser mic or local mic → 16kHz mono WAV  
+- **STT:** Transcribe with `SpeechRecognition` (file) now; later replace with Whisper API or local Whisper on Jetson  
+- **LLM:** Send transcript to **Groq** (therapeutic/system prompt) → empathetic reply text  
+- **TTS:** Convert reply to speech (start with **ElevenLabs**; later optional local **Piper TTS** for offline)  
+- **UI/State:** Show transcript + model reply; keep simple chat history for context  
+**Acceptance criteria:** Streamlit page runs start→finish without manual file hops; output MP3 plays inline.  
+**Metrics (later):** STT WER (sample clips), latency per stage (STT/LLM/TTS), perceived naturalness (1–5).
+
+---
+
+### 2) Jetson Integration (theoretical design) 🤖🎛️  
+**Why hybrid:** Jetson is ideal for edge audio + light STT, while LLM/TTS live in cloud initially.  
+**Recommended split:**  
+- **On Jetson (edge):**  
+  - Audio capture (ALSA/PulseAudio) → WAV  
+  - **Local STT**: *faster-whisper* (CUDA/FP16) on Xavier/Orin or **Vosk** (CPU) on Nano  
+  - Streamlit UI (headless) to orchestrate flow  
+- **In cloud:**  
+  - **Groq LLM** (therapeutic responses)  
+  - **ElevenLabs TTS** (natural voices) → optional **Piper TTS** for offline later  
+**Model sizing guidance:** Nano → `faster-whisper` *tiny* (or Vosk). Xavier/Orin → *tiny/base* FP16 OK.  
+**Audio constraints:** 16kHz mono; short 5–10s chunks for responsiveness.  
+**Security:** Keep raw audio on edge; send only transcript to cloud if needed.  
+**Acceptance criteria:** Jetson records → local STT → cloud LLM → TTS → plays audio on Jetson.
+
+---
+
+### 3) Avatar Creation (theoretical) 🗣️🧑‍🎨  
+**Goal:** Friendly on-screen avatar that **speaks** TTS audio and **reacts** to mood.  
+**MVP:** Static PNG/SVG avatar + **audio waveform** animation while playing MP3; subtitles show LLM reply.  
+**Enhanced:** 2D talking-head (viseme-driven) with basic emotion states (happy/neutral/concerned) driven by transcript sentiment.  
+**Offline-friendly:** Use **Piper TTS** phoneme timings to drive visemes when offline.  
+**Acceptance criteria:** Avatar renders, animates during playback, captions match spoken text.
+
+---
+
+### 4) Jetson Object Detection (camera) 📷🟦  
+**Goal:** Optional context-aware cues (e.g., detect person presence, objects) via Jetson camera input.  
+**Design (theoretical):**  
+- **Capture:** CSI (Raspberry Pi cam) or USB webcam using `v4l2`/GStreamer.  
+- **Model:** TensorRT-optimized **YOLO** (e.g., YOLOv5n/YOLOv8n) or NVIDIA **DetectNet** sample.  
+- **Pipeline:** Camera → inference (TensorRT) → bounding boxes → lightweight events to Streamlit (e.g., “person detected”) to adapt bot UX.  
+- **Performance notes:** Use **n**/**nano** variants, FP16/INT8 (calibrated) for real-time; lower resolution (640×480) for Nano.  
+- **Security:** Do on-device inference; don’t transmit frames by default.  
+**Acceptance criteria:** Live camera preview + object labels at ≥10 FPS on-board; events optionally influence prompts (“user present”, “distraction detected”).
+
+---
+
 ## 🧭 Roadmap (Next Steps) 🛠️
 
 - [ ] **Connect** `record_test.py` mic capture directly to SR (live transcription).  
 - [ ] **Add LLM** call (Groq) to generate empathetic, context-aware replies.  
 - [ ] **Add TTS** (ElevenLabs) to speak the LLM response.  
 - [ ] **Single Streamlit app** that does: Record → Transcribe → Think → Speak.  
-- [ ] **Emotion detection** (rule-based / model-based) to tailor responses.  
-- [ ] **Session history** + simple prompt engineering for continuity.  
+- [ ] **Jetson edge STT** (faster-whisper/Vosk) + optional **Jetson object detection**.  
+- [ ] **Avatar** (waveform → viseme-driven mouth).  
+- [ ] **Metrics pass** (WER, latency, MOS-lite).  
 - [ ] **Dockerfile** / one-click launch for easier setup.  
 - [ ] **Unit tests** for audio I/O and API gateways.
-
----
-
-## 🧪 Suggested Integration Flow
-
-1. **Record** audio in Streamlit (web mic) or via `sounddevice`.  
-2. **SR**: Transcribe with `SpeechRecognition` (or Whisper API).  
-3. **LLM**: Send transcript to Groq (system prompt = therapist style).  
-4. **TTS**: Convert model reply to audio with ElevenLabs.  
-5. **UI**: Display transcript + play audio response; keep chat history.
 
 ---
 
@@ -190,7 +248,7 @@ print(text)
 pip install -r requirements.txt
 
 # Run UI
-python -m streamlit run Bot.py
+python -m streamlit run bot.py
 
 # Record mic test
 python record_test.py
@@ -221,4 +279,4 @@ Add your preferred license (MIT recommended for open projects).
 
 ---
 
-**TL;DR:** Everything runs **separately** right now. The goal is to **connect** audio capture → STT → LLM → TTS into one Streamlit app. 💪✨
+**TL;DR:** Everything runs **separately** right now. The goal is to **connect** audio capture → STT → LLM → TTS into one Streamlit app, with Jetson edge STT + optional object detection and a speaking avatar. 💪✨
