@@ -80,14 +80,6 @@ pip install pyaudio==0.2.13 --only-binary=:all:
 # (If that fails, try without --only-binary)
 ```
 
-### macOS/Linux (bash/zsh)
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
 ---
 
 ## 🔐 Environment Variables (Optional but Recommended)
@@ -199,7 +191,7 @@ print(text)
 
 ---
 
-### 2) Jetson Integration (theoretical design) 🤖🎛️  
+### 2) Jetson Integration 🤖🎛️  
 **Why hybrid:** Jetson is ideal for edge audio + light STT, while LLM/TTS live in cloud initially.  
 **Recommended split:**  
 - **On Jetson (edge):**  
@@ -216,7 +208,7 @@ print(text)
 
 ---
 
-### 3) Avatar Creation (theoretical) 🗣️🧑‍🎨  
+### 3) Avatar Creation 🗣️🧑‍🎨  
 **Goal:** Friendly on-screen avatar that **speaks** TTS audio and **reacts** to mood.  
 **MVP:** Static PNG/SVG avatar + **audio waveform** animation while playing MP3; subtitles show LLM reply.  
 **Enhanced:** 2D talking-head (viseme-driven) with basic emotion states (happy/neutral/concerned) driven by transcript sentiment.  
