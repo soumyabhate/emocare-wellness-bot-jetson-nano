@@ -1,4 +1,4 @@
-# EmoCare Therapy Bot 🧠💬🎧
+# EmoCare Wellness Bot 🧠💬🎧
 
 > **Status:** Components are currently **not connected** end‑to‑end. Each file works **separately**.  
 > **Next step:** **Integrate** voice recording → STT → LLM → TTS → Streamlit UI into one flow. 🚀
