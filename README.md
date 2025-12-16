@@ -1,97 +1,143 @@
-🧠 EmoCare: AI Wellness Companion 🧘🏻‍♀️
-An AI-powered, empathetic conversational agent built to provide gentle support and self-reflection space.
+# 🧠 EmoCare: AI Wellness Companion 🧘🏻‍♀️
 
-Status
-Course & Context
-Framework
-Complete ✅
+> *An AI-powered, empathetic conversational agent built to provide gentle support and a safe space for self-reflection.*
 
-Data 690: Special Topics in AI
-Streamlit, Groq, ElevenLabs
+---
 
-✨ Overview
-EmoCare is more than a chatbot; it's a personalized wellness companion designed to help users process their emotions, find healthy coping strategies, and track their reflections in a gentle, non-judgmental environment.
+## 📌 Project Status
+**Framework:** Complete ✅  
+**Course:** Data 690 – Special Topics in AI  
+**Tech Stack:** Streamlit · Groq · ElevenLabs  
 
-This project was developed as part of my Data 690: Special Topics in AI course, under the guidance of Prof. Levan Sulimanov.
+---
 
-🚀 Key Features
-Custom Theming: A unique, warm, and minimal aesthetic using Streamlit's custom CSS (wellness.css) for a cozy user experience.
+## ✨ Overview
 
-Conversational AI: Utilizes Groq's high-speed API (via Llama 3.1) for fast, empathetic, and context-aware responses based on the user's chosen mood and focus area.
+**EmoCare** is more than a chatbot — it’s a personalized wellness companion designed to help users process emotions, discover healthy coping strategies, and reflect mindfully in a **non-judgmental, supportive environment**.
 
-Voice Mode (🎙️ STT & 🔊 TTS): Seamless integration with ElevenLabs for Speech-to-Text (STT) transcription and Text-to-Speech (TTS) voice responses, making interaction hands-free and more personal.
+This project was developed as part of **Data 690: Special Topics in AI**, under the guidance of **Prof. Levan Sulimanov**, with a focus on applying modern AI responsibly in the mental wellness domain.
 
-Personalized Context: Users can upload a personal journal/notes PDF for EmoCare to use as context, along with an auto-generated Word Cloud for visual insights.
+---
 
-Action Compass: A dynamic sidebar component that provides immediate, gentle, mood-based action nudges (e.g., "Angry → Sing it out 🎵").
+## 🚀 Key Features
 
-Calm Quest Mini-Game: A 3-step, 60-second guided reset for grounding, including a breathing timer, a focus exercise, and a one-line journaling prompt.
+### 🎨 Custom Theming
+- Warm, minimal, and calming UI  
+- Built using **Streamlit custom CSS (`wellness.css`)** for a cozy wellness-focused experience
 
-Mood-based Music: Recommendations for relevant YouTube playlists based on the user's selected mood.
+### 💬 Conversational AI
+- Powered by **Groq’s high-speed LLM API (Llama 3.1)**  
+- Delivers fast, empathetic, and context-aware responses  
+- Adapts replies based on user-selected **mood** and **focus area**
 
-🛠️ Installation and Setup
-1. Clone the Repository
-Bash
+### 🎙️ Voice Mode (STT & 🔊 TTS)
+- Hands-free interaction via **ElevenLabs**
+- **Speech-to-Text (STT)** for voice input  
+- **Text-to-Speech (TTS)** for natural, calming voice responses
+
+### 📖 Personalized Context
+- Upload personal **journal / notes PDFs**
+- EmoCare uses them as contextual grounding  
+- Auto-generated **Word Cloud** for visual emotional insights
+
+### 🧭 Action Compass
+- Dynamic sidebar offering **gentle, mood-based nudges**
+- Example:  
+  > *Angry → 🎵 Sing it out*
+
+### 🌿 Calm Quest Mini‑Game
+A 60‑second guided reset consisting of:
+1. 🫁 Breathing timer  
+2. 🎯 Focus exercise  
+3. ✍️ One-line journaling prompt  
+
+### 🎧 Mood‑Based Music
+- Curated **YouTube playlist recommendations**
+- Automatically matched to the user’s selected mood
+
+---
+
+## 🛠️ Installation & Setup
+
+### 1️⃣ Clone the Repository
+```bash
 git clone <your-repo-link>
 cd emacare
+```
 
-2. Install Dependencies
-All required packages are listed in requirements.txt
-Bash
+### 2️⃣ Install Dependencies
+```bash
 pip install -r requirements.txt
+```
+> ⚠️ Requires **ffmpeg** to be installed for `ffmpeg-python`
 
-(Note: This requires ffmpeg to be installed on your system for ffmpeg-python.)
-
-3. Configure Environment Variables
-Create a file named .env in the root directory and populate it with your API keys:
-
+### 3️⃣ Configure Environment Variables
+Create a `.env` file in the root directory:
+```env
 GROQ_API_KEY=gsk_...
 ELEVENLABS_API_KEY=sk_...
+```
 
-GROQ_API_KEY: Required for the core conversational logic (LLM).
-ELEVENLABS_API_KEY: Required for Voice Mode (STT) and Text-to-Speech (TTS).
+**API Usage**
+- `GROQ_API_KEY` → Core conversational LLM logic  
+- `ELEVENLABS_API_KEY` → Voice Mode (STT & TTS)
 
-4. Run the Application
-Bash
+### 4️⃣ Run the Application
+```bash
 streamlit run wellness.py
+```
 
-🐛 Troubleshooting and Solutions
-Developing EmoCare required overcoming a few key technical hurdles, particularly around the real-time audio components.
+---
 
-Problem Encountered
-Solution & Fix
+## 🐛 Troubleshooting & Solutions
 
-ElevenLabs TTS Output Stream
-The ElevenLabs SDK could return audio data as either a bytes object or an iterable stream. The fix was to check the return type and use b"".join(chunk for chunk in audio_result) to correctly combine chunks if a generator was returned.
+| Problem Encountered | Solution |
+|-------------------|----------|
+| **ElevenLabs TTS Output Stream** | SDK sometimes returns a generator instead of bytes. Fixed using:<br>`b"".join(chunk for chunk in audio_result)` |
+| **ElevenLabs STT Model ID** | Transcription failed with generic IDs. Explicitly used **`scribe_v1`**, optimized for STT |
+| **sounddevice Device Selection** | Stored device IDs in `st.session_state` and set:<br>`sd.default.device = (input_id, output_id)` |
+| **Streamlit Button Reruns** | Required immediate state updates and `st.rerun()` for UI step transitions |
 
-ElevenLabs STT Model ID
-Initial attempts at Speech-to-Text failed with generic model IDs. The critical fix was identifying and explicitly using the correct STT model ID, "scribe_v1", which is optimized for transcription.
+---
 
-sounddevice Device Selection
-Handling local audio devices (sounddevice) in Streamlit required saving the device IDs in st.session_state and explicitly setting sd.default.device as a tuple (input_device_id, output_device_id) when the user clicked "Apply Devices".
+## 🖼️ UI & Response Examples
 
-Streamlit st.button Reruns
-The nature of Streamlit's state management meant actions like "Record Voice" or "Start Breathing" required an immediate state update and a hard st.rerun() to reflect changes and transition the UI steps.
+### 💬 EmoCare Response Example
 
-🖼️ User Interface & Response Examples
-EmoCare Response Example:
+**User (Voice):**  
+> *"I feel like I have too much on my plate this week. My boss gave me two huge deadlines and I haven't slept well."*
 
-User Input: (Voice)
-"I feel like I have too much on my plate this week. My boss gave me two huge deadlines and I haven't slept well."
+**EmoCare:**  
+> *"That sounds like a heavy load to carry right now. It’s completely understandable that you’re feeling overwhelmed and losing sleep. Your worth isn’t tied to productivity. Could you try one small act of self‑care — maybe stepping away for 90 seconds and stretching? Is there one meeting you could postpone or one small task you could delegate to give yourself a little more room to breathe?"*
 
-Companion:
-"That sounds like a heavy load to carry right now. It's completely understandable that you're feeling overwhelmed and losing sleep. Remember, your worth isn't tied to your productivity. Could you try one small act of self-care right now, like stepping away from your desk for 90 seconds and stretching? And, when you look at your calendar, is there one meeting you could postpone or one small task you could delegate to give yourself a tiny bit more room to breathe?"
+---
 
-Action Compass Example:
-A user selects Stressed / Overwhelmed as their current mood. The Action Compass automatically highlights a suggestion:
+### 🧭 Action Compass Example
 
-<div class="compass-swatch active"><b>Stressed</b> → 🏃 Move your body – even 60 seconds counts</div>
+When the user selects **Stressed / Overwhelmed**, EmoCare highlights:
 
-🙏 Acknowledgements
-Prof. Levan Sulimanov: For providing the framework and inspiration within the Data 690 course to explore advanced AI applications in the realm of mental wellness.
+```html
+<div class="compass-swatch active">
+  <b>Stressed</b> → 🏃 Move your body – even 60 seconds counts
+</div>
+```
 
-Groq: For providing blazing-fast LLM inference that makes the conversational experience feel immediate and supportive.
+---
 
-ElevenLabs: For the high-quality, seamless Speech-to-Text and Text-to-Speech APIs that brought the companion to life.
+## 🙏 Acknowledgements
 
-Streamlit: For the incredible open-source platform that made it possible to build a professional-grade web application entirely in Python.
+- **Prof. Levan Sulimanov**  
+  For the academic framework and inspiration to explore ethical AI in mental wellness  
+
+- **Groq**  
+  For blazing-fast LLM inference enabling real-time, supportive conversations  
+
+- **ElevenLabs**  
+  For high-quality Speech-to-Text and Text-to-Speech APIs  
+
+- **Streamlit**  
+  For making it possible to build a professional-grade AI web app entirely in Python  
+
+---
+
+🌱 *Built with empathy, responsibility, and human-centered AI in mind.*
