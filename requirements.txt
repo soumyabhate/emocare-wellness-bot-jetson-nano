@@ -1,0 +1,13 @@
+streamlit
+sounddevice
+numpy
+scipy
+ffmpeg-python
+python-dotenv
+elevenlabs>=1.0.0
+groq
+PyPDF2
+matplotlib
+wordcloud
+scikit-learn
+gensim

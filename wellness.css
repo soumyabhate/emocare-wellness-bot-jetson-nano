@@ -1,0 +1,215 @@
+/* ========== EmoCare Minimal Theme CSS ========== */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap');
+
+html, body, .stApp { height: 100%; }
+
+body, p, label,
+h1, h2, h3, h4, h5, h6,
+div, input, textarea,
+li, a, small, strong, em {
+  font-family: 'Source Sans 3', system-ui, -apple-system, "Segoe UI", sans-serif !important;
+}
+
+/* App background */
+.stApp, body {
+  background: #CE7E5A !important; /* terracotta */
+}
+
+/* ================= SIDEBAR ================= */
+section[data-testid="stSidebar"] {
+  background: #F9E7B2;            /* soft yellow */
+  border-right: 1px solid #735557;
+}
+
+/* Sidebar headings */
+section[data-testid="stSidebar"] h2,
+section[data-testid="stSidebar"] h3 {
+  color: #CE7E5A !important;
+}
+
+/* Sidebar text default */
+section[data-testid="stSidebar"] * {
+  color: #000000 !important;
+}
+
+/* Sidebar selectbox: force selected + dropdown text white (your dark select theme) */
+section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] * {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* Sidebar file uploader: keep text white inside dropzone */
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] * {
+  color: #ffffff !important;
+}
+
+/* ================= MAIN CARD ================= */
+main .block-container {
+  padding: 2rem !important;
+  max-width: 900px;
+  border-radius: 12px;
+  background: #66321f !important; /* dark brown card */
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+}
+
+/* Headings in main area */
+h1, h2, h3, h4, h5 {
+  color: #F9E7B2 !important;
+}
+
+/* ================= BUTTONS ================= */
+.stButton > button {
+  background: #F9E7B2 !important;
+  color: #000000 !important;
+  border-radius: 6px;
+  border: none !important;
+  padding: 0.55rem 1.6rem;
+  font-weight: 700;
+}
+
+.stButton > button:hover {
+  background: #E8D794 !important;
+  color: #000000 !important;
+}
+
+/* ================= TEXTAREA ================= */
+textarea {
+  border-radius: 6px !important;
+  border: 1px solid #F9E7B2 !important;
+  color: #000000 !important;
+  background: #F9E7B2 !important;
+  box-shadow: none !important;
+}
+
+/* ================= CHAT ================= */
+[data-testid="stChatMessage"] {
+  background-color: #D29F80;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+}
+
+div[data-testid="stChatMessage"] p {
+  color: #000000 !important;
+}
+
+/* Chat container wrapper */
+div.element-container:has(div.stChatContainer) {
+  background-color: #F9E7B2;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 10px;
+}
+
+/* ================= AVATAR ================= */
+.avatar-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 16px;
+  margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.avatar-image {
+  font-size: 80px;
+  line-height: 1;
+  animation: float 3s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.avatar-text {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #F9E7B2 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Captions on main view */
+div[data-testid="stAppViewContainer"] .stCaption,
+div[data-testid="stAppViewContainer"] [data-testid="stCaptionContainer"],
+div[data-testid="stAppViewContainer"] [data-testid="stMarkdownContainer"] small,
+div[data-testid="stAppViewContainer"] [data-testid="stMarkdownContainer"] p small {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+  color: #1a0700 !important;
+  font-weight: 900 !important;
+}
+
+/* ================= Compass paint swatches ================= */
+.compass-swatch {
+  position: relative;
+  padding: 12px 14px;
+  margin: 10px 0;
+  border-radius: 16px;
+  color: rgba(249,231,178,0.96);
+  font-weight: 750;
+  line-height: 1.45;
+  z-index: 0;
+}
+
+.compass-swatch::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 115%;
+  z-index: -1;
+
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(249,231,178,0.14) 0 18px,
+      rgba(249,231,178,0.10) 18px 28px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(249,231,178,0.20),
+      rgba(249,231,178,0.10)
+    );
+
+  border-radius: 18px;
+  opacity: 0.95;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
+}
+
+.compass-swatch.active::before {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(249,231,178,0.20) 0 18px,
+      rgba(249,231,178,0.14) 18px 28px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(249,231,178,0.28),
+      rgba(249,231,178,0.14)
+    );
+  box-shadow: 0 14px 28px rgba(0,0,0,0.14);
+}
+
+/* Make st.info / st.warning / st.success text readable on your theme */
+div.stAlert p,
+div.stAlert span,
+div.stAlert a {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+}
+
+section[data-testid="stCheckbox"] label {
+  font-weight: 500;
+  color: #F9E7B2;
+}

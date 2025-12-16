@@ -1,232 +1,97 @@
-# EmoCare Wellness Bot 🧠💬🎧
+🧠 EmoCare: AI Wellness Companion 🧘🏻‍♀️
+An AI-powered, empathetic conversational agent built to provide gentle support and self-reflection space.
 
-> **Status:** Components are currently **not connected** end‑to‑end. Each file works **separately**.  
-> **Next step:** **Integrate** voice recording → STT → LLM → TTS → Streamlit UI into one flow. 🚀
+Status
+Course & Context
+Framework
+Complete ✅
 
----
+Data 690: Special Topics in AI
+Streamlit, Groq, ElevenLabs
 
-## 📌 What is this?
+✨ Overview
+EmoCare is more than a chatbot; it's a personalized wellness companion designed to help users process their emotions, find healthy coping strategies, and track their reflections in a gentle, non-judgmental environment.
 
-A starter kit for an emotion-aware therapy bot. The repo includes:
-- A **Streamlit UI** prototype
-- **Voice recording** utility
-- **Speech-to-text** (SR) scaffolding
-- **Text-to-speech** (TTS) hooks
-- Sample audio files
+This project was developed as part of my Data 690: Special Topics in AI course, under the guidance of Prof. Levan Sulimanov.
 
-Right now, these pieces run **individually**. The plan is to **wire them together** next.
+🚀 Key Features
+Custom Theming: A unique, warm, and minimal aesthetic using Streamlit's custom CSS (wellness.css) for a cozy user experience.
 
----
+Conversational AI: Utilizes Groq's high-speed API (via Llama 3.1) for fast, empathetic, and context-aware responses based on the user's chosen mood and focus area.
 
-## 🗂️ Repository Structure
+Voice Mode (🎙️ STT & 🔊 TTS): Seamless integration with ElevenLabs for Speech-to-Text (STT) transcription and Text-to-Speech (TTS) voice responses, making interaction hands-free and more personal.
 
-```
-EmoCare Therapy Bot/
-├─ .venv/                      # Local virtual environment (optional)
-├─ .env                        # Your secrets (not committed) – optional
-├─ README.md                   # This file
-├─ requirements.txt            # Python dependencies
-├─ bot.py                      # Main LLM workflow (renamed from Yipeeeee.py); may include Streamlit UI sections
-├─ bot_ui.py                   # Alternate/minimal Streamlit UI shell
-├─ streamlit.ipynb             # Notebook used to design UI
-├─ record_test.py              # Mic → WAV recorder & playback test
-├─ avatar_output.mp3           # Sample output audio
-├─ soumya_input.mp3            # Sample input audio
-└─ (others)                    # e.g., __pycache__, assets, etc.
-```
-> ⚠️ **Important:** Don’t keep a file named `streamlit.py` in this folder—  
-> it shadows the real `streamlit` library and causes import errors.
+Personalized Context: Users can upload a personal journal/notes PDF for EmoCare to use as context, along with an auto-generated Word Cloud for visual insights.
 
----
+Action Compass: A dynamic sidebar component that provides immediate, gentle, mood-based action nudges (e.g., "Angry → Sing it out 🎵").
 
-## 🧰 Tech Stack
+Calm Quest Mini-Game: A 3-step, 60-second guided reset for grounding, including a breathing timer, a focus exercise, and a one-line journaling prompt.
 
-- **Frontend:** Streamlit 🖥️  
-- **Audio I/O:** `sounddevice`, `PyAudio` 🎙️  
-- **STT (Speech-to-Text):** `SpeechRecognition` (file/mic) 🗣️→📝  
-- **LLM (reasoning):** Groq API (planned) 🤖  
-- **TTS (Text-to-Speech):** ElevenLabs API (planned) 📝→🔊  
-- **Utils:** `ffmpeg-python`, `python-dotenv`, `numpy`, `scipy`
+Mood-based Music: Recommendations for relevant YouTube playlists based on the user's selected mood.
 
----
+🛠️ Installation and Setup
+1. Clone the Repository
+Bash
+git clone <your-repo-link>
+cd emacare
 
-## ✅ Prerequisites
-
-- **Python 3.10/3.11**
-- **FFmpeg** installed & on PATH  
-  - Windows: install via `choco install ffmpeg` *or* download from ffmpeg.org  
-  - macOS: `brew install ffmpeg`  
-  - Ubuntu: `sudo apt-get install -y ffmpeg`
-- **(Windows mic)** `PyAudio` (we’ll install below).  
-  macOS/Linux often use PortAudio system libs.
-
----
-
-## ⚙️ Setup
-
-### Windows (PowerShell)
-```powershell
-# 1) Open folder in VS Code and create a venv
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-
-# 2) Install Python packages
-python -m pip install --upgrade pip
+2. Install Dependencies
+All required packages are listed in requirements.txt
+Bash
 pip install -r requirements.txt
 
-# If you see SR/PyAudio errors:
-pip install SpeechRecognition
-pip install pyaudio==0.2.13 --only-binary=:all:
-# (If that fails, try without --only-binary)
-```
+(Note: This requires ffmpeg to be installed on your system for ffmpeg-python.)
 
----
+3. Configure Environment Variables
+Create a file named .env in the root directory and populate it with your API keys:
 
-## 🔐 Environment Variables (Optional but Recommended)
+GROQ_API_KEY=gsk_...
+ELEVENLABS_API_KEY=sk_...
 
-Create a file named `.env` in the project root:
-```
-GROQ_API_KEY=sk_groq_...
-ELEVEN_API_KEY=your_eleven_key
-ELEVEN_VOICE_ID=21m00Tcm4TlvDq8ikWAM
-DEBUG=false
-```
-> Keep `.env` **out of Git**. Add it to `.gitignore`.  
-> A public `.env.example` with placeholders is safe to commit.
+GROQ_API_KEY: Required for the core conversational logic (LLM).
+ELEVENLABS_API_KEY: Required for Voice Mode (STT) and Text-to-Speech (TTS).
 
----
+4. Run the Application
+Bash
+streamlit run wellness.py
 
-## ▶️ How to Run Each Part (for now)
+🐛 Troubleshooting and Solutions
+Developing EmoCare required overcoming a few key technical hurdles, particularly around the real-time audio components.
 
-### 1) Streamlit UI
-```powershell
-# Windows (with venv activated)
-python -m streamlit run bot.py (write your filename)
+Problem Encountered
+Solution & Fix
 
-```
-> If it says “`streamlit` not recognized”, you’re not using the venv or it’s not installed. Run:
-> `pip install streamlit` and use `python -m streamlit ...`.
+ElevenLabs TTS Output Stream
+The ElevenLabs SDK could return audio data as either a bytes object or an iterable stream. The fix was to check the return type and use b"".join(chunk for chunk in audio_result) to correctly combine chunks if a generator was returned.
 
-### 2) Record Audio (Mic → WAV)
-```powershell
-python record_test.py
-```
-- Saves a WAV you can feed into `SpeechRecognition` as an offline file.
+ElevenLabs STT Model ID
+Initial attempts at Speech-to-Text failed with generic model IDs. The critical fix was identifying and explicitly using the correct STT model ID, "scribe_v1", which is optimized for transcription.
 
-### 3) STT from WAV (example snippet)
-```python
-import speech_recognition as sr
-r = sr.Recognizer()
-with sr.AudioFile("input.wav") as src:
-    audio = r.record(src)
-text = r.recognize_google(audio)  # or use Whisper/other backends
-print(text)
-```
+sounddevice Device Selection
+Handling local audio devices (sounddevice) in Streamlit required saving the device IDs in st.session_state and explicitly setting sd.default.device as a tuple (input_device_id, output_device_id) when the user clicked "Apply Devices".
 
-### 4) TTS via ElevenLabs (what I used, you can have your own)
-- After setting `ELEVEN_API_KEY`, call the ElevenLabs SDK to synthesize reply audio.
+Streamlit st.button Reruns
+The nature of Streamlit's state management meant actions like "Record Voice" or "Start Breathing" required an immediate state update and a hard st.rerun() to reflect changes and transition the UI steps.
 
----
+🖼️ User Interface & Response Examples
+EmoCare Response Example:
 
-## 🪲 Troubleshooting
+User Input: (Voice)
+"I feel like I have too much on my plate this week. My boss gave me two huge deadlines and I haven't slept well."
 
-- **`ModuleNotFoundError: No module named 'speech_recognition'`**  
-  `pip install SpeechRecognition` (inside venv)
+Companion:
+"That sounds like a heavy load to carry right now. It's completely understandable that you're feeling overwhelmed and losing sleep. Remember, your worth isn't tied to your productivity. Could you try one small act of self-care right now, like stepping away from your desk for 90 seconds and stretching? And, when you look at your calendar, is there one meeting you could postpone or one small task you could delegate to give yourself a tiny bit more room to breathe?"
 
-- **PyAudio install issues (Windows)**  
-  Try: `pip install pyaudio==0.2.13 --only-binary=:all:`  
-  If still failing, temporarily avoid live mic by recording to WAV and using `AudioFile`.
+Action Compass Example:
+A user selects Stressed / Overwhelmed as their current mood. The Action Compass automatically highlights a suggestion:
 
-- **Streamlit import crash**  
-  Make sure you **don’t** have a file named `streamlit.py` in your project. Rename it (e.g., `app_ui.py`) and delete `__pycache__`.
+<div class="compass-swatch active"><b>Stressed</b> → 🏃 Move your body – even 60 seconds counts</div>
 
-- **FFmpeg not found**  
-  Ensure `ffmpeg -version` works in terminal. Add FFmpeg `/bin` to PATH (Windows).
+🙏 Acknowledgements
+Prof. Levan Sulimanov: For providing the framework and inspiration within the Data 690 course to explore advanced AI applications in the realm of mental wellness.
 
-- **Mic permissions (macOS)**  
-  System Settings → Privacy & Security → Microphone → allow Terminal/VS Code.
+Groq: For providing blazing-fast LLM inference that makes the conversational experience feel immediate and supportive.
 
----
+ElevenLabs: For the high-quality, seamless Speech-to-Text and Text-to-Speech APIs that brought the companion to life.
 
-> Artifacts to attach when submitting: `input.wav`, `avatar_output.mp3`, terminal screenshots (`arecord -l`, `v4l2-ctl --list-devices`, `ffmpeg -version`, `TRANSCRIPT: ...`, latency line), Streamlit page capture.
-
----
-
-## Next step to do 🚀
-
-### 1) Connect Everything (E2E pipeline) 🔗  
-**Goal:** One-click flow inside Streamlit: **Record → STT → LLM → TTS → Play**  
-**Design (theoretical):**  
-- **Capture:** Browser mic or local mic → 16kHz mono WAV  
-- **STT:** Transcribe with `SpeechRecognition` (file) now; later replace with Whisper API or local Whisper on Jetson  
-- **LLM:** Send transcript to **Groq** (therapeutic/system prompt) → empathetic reply text  
-- **TTS:** Convert reply to speech (start with **ElevenLabs**; later optional local **Piper TTS** for offline)  
-- **UI/State:** Show transcript + model reply; keep simple chat history for context  
-**Acceptance criteria:** Streamlit page runs start→finish without manual file hops; output MP3 plays inline.  
-**Metrics (later):** STT WER (sample clips), latency per stage (STT/LLM/TTS), perceived naturalness (1–5).
-
----
-
-### 2) Jetson Integration 🤖🎛️  
-**Why hybrid:** Jetson is ideal for edge audio + light STT, while LLM/TTS live in cloud initially.  
-**Recommended split:**  
-- **On Jetson (edge):**  
-  - Audio capture (ALSA/PulseAudio) → WAV  
-  - **Local STT**: *faster-whisper* (CUDA/FP16) on Xavier/Orin or **Vosk** (CPU) on Nano  
-  - Streamlit UI (headless) to orchestrate flow  
-- **In cloud:**  
-  - **Groq LLM** (therapeutic responses)  
-  - **ElevenLabs TTS** (natural voices) → optional **Piper TTS** for offline later  
-**Model sizing guidance:** Nano → `faster-whisper` *tiny* (or Vosk). Xavier/Orin → *tiny/base* FP16 OK.  
-**Audio constraints:** 16kHz mono; short 5–10s chunks for responsiveness.  
-**Security:** Keep raw audio on edge; send only transcript to cloud if needed.  
-**Acceptance criteria:** Jetson records → local STT → cloud LLM → TTS → plays audio on Jetson.
-
----
-
-### 3) Avatar Creation via Jetson 🗣️🧑‍🎨  
-**Goal:** Friendly on-screen avatar that **speaks** TTS audio and **reacts** to mood.  
-**MVP:** Static PNG/SVG avatar + **audio waveform** animation while playing MP3; subtitles show LLM reply.  
-**Enhanced:** 2D talking-head (viseme-driven) with basic emotion states (happy/neutral/concerned) driven by transcript sentiment.  
-**Offline-friendly:** Use **Piper TTS** phoneme timings to drive visemes when offline.  
-**Acceptance criteria:** Avatar renders, animates during playback, captions match spoken text.
-
----
-
-## 🏷️ Scripts & Commands (Quick Reference)
-
-```powershell
-# Activate venv (Windows)
-.\.venv\Scripts\Activate.ps1
-
-# Install core deps
-pip install -r requirements.txt
-
-# Run UI
-python -m streamlit run bot.py
-
-# Record mic test
-python record_test.py
-```
-
----
-
-## 🤝 Contributing
-
-- Open issues for bugs or feature requests.
-- Keep PRs small and focused (UI, audio, STT, TTS, or LLM separately).
-- Don’t commit secrets—use `.env`.
-
----
-
-## 🙏 Acknowledgements
-
-- Streamlit team for the rapid UI framework  
-- ElevenLabs for TTS
-- Groq for STT
-- Groq for LLM infra  
-- Open-source contributors of `SpeechRecognition`, `PyAudio`, `sounddevice`
-
----
-
-**TL;DR:** Everything runs **separately** right now. The goal is to **connect** audio capture → STT → LLM → TTS into one Streamlit app, with Jetson edge STT and a speaking avatar.
+Streamlit: For the incredible open-source platform that made it possible to build a professional-grade web application entirely in Python.
