@@ -939,7 +939,7 @@ with right_col:
     st.caption("A calming voice assistant 🫂")
     st.markdown("---")
 
-    st.markdown("##### 🎛️ Mic & Speaker Selection")
+    st.markdown("#### 🎛️ Mic & Speaker Selection")
 
     try:
         devices = sd.query_devices()
