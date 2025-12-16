@@ -16,11 +16,17 @@ import PyPDF2
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
-
-import sounddevice as sd
 import numpy as np
 import soundfile as sf
 from tempfile import NamedTemporaryFile
+
+try:
+    import sounddevice as sd
+    SOUNDDEVICE_OK = True
+except Exception:
+    sd = None
+    SOUNDDEVICE_OK = False
+
 
 try:
     from elevenlabs.client import ElevenLabs
@@ -802,6 +808,12 @@ with center_col:
 
     # ================= VOICE MODE =================
     else:
+        if not SOUNDDEVICE_OK:
+            st.info(
+                "🎙️ Voice recording (microphone) is disabled on Streamlit Cloud.\n\n"
+                "You can still use **Text Mode** or upload audio files in future versions."
+            )
+            st.stop()
         if not st.session_state.recording_active:
             if not elevenlabs_client:
                 st.error("🎙️ Voice mode is disabled: ElevenLabs API Key is missing or invalid.")
