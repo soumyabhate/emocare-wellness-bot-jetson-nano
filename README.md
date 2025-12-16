@@ -127,7 +127,11 @@ When the user selects **Stressed / Overwhelmed**, EmoCare highlights:
 
 A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness experience.
 
-<p align="center"> <img src="EmoCareUI.png" width="35%" alt="EmoCare main wellness interface" /> <img src="EmoCareChatUI.png" width="32%" alt="EmoCare chat and conversation interface" /> <img src="EmoCareSidebar.png" width="20%" alt="EmoCare sidebar with music and journal upload" /> </p>
+<table> <tr> <!-- LEFT COLUMN: TWO UI IMAGES STACKED --> <td width="65%" align="center"> <img src="EmoCareUI.png" width="95%" alt="EmoCare main wellness interface" /> <br/><br/> <img src="EmoCareChatUI.png" width="95%" alt="EmoCare chat and conversation interface" /> </td>
+<!-- RIGHT COLUMN: SINGLE VERTICAL SIDEBAR IMAGE -->
+<td width="35%" align="center">
+  <img src="assets/screenshots/EmoCareSidebar.png" width="95%" alt="EmoCare sidebar with music, journal upload, and tools" />
+</td>
 
 ---
 
