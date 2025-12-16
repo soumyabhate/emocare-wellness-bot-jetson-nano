@@ -123,6 +123,13 @@ When the user selects **Stressed / Overwhelmed**, EmoCare highlights:
 ```
 
 ---
+🖼️ App Interface Preview
+
+A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness experience.
+
+<p align="center"> <img src="EmoCareUI.png" width="32%" alt="EmoCare main wellness interface" /> <img src="EmoCareChatUI.png" width="32%" alt="EmoCare chat and conversation interface" /> <img src="EmoCareSidebar.png" width="32%" alt="EmoCare sidebar with music and journal upload" /> </p>
+
+---
 
 ## 🙏 Acknowledgements
 
