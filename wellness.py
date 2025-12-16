@@ -17,7 +17,14 @@ import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import numpy as np
-import soundfile as sf
+
+try:
+    import soundfile as sf
+    SOUNDFILE_OK = True
+except Exception:
+    sf = None
+    SOUNDFILE_OK = False
+
 from tempfile import NamedTemporaryFile
 
 try:
@@ -448,6 +455,11 @@ def generate_wordcloud(text: str):
 # ---------- AUDIO HELPERS (voice mode) ----------
 
 def record_voice_to_wav(seconds: int = 10, sample_rate: int = 16000) -> Optional[str]:
+     # ✅ Guard (must be indented inside the function)
+    if (not SOUNDDEVICE_OK) or (not SOUNDFILE_OK):
+        st.error("Voice recording isn't available in this environment.")
+        return None
+
     """Records audio and returns the temporary file path."""
     try:
         if st.session_state.get('recording_active', False):
