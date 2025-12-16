@@ -57,6 +57,18 @@ A 60‑second guided reset consisting of:
 
 ---
 
+🖼️ App Interface Preview
+
+A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness experience.
+
+<table> <tr> <!-- LEFT COLUMN: TWO UI IMAGES STACKED --> <td width="65%" align="center"> <img src="EmoCareUI.png" width="95%" alt="EmoCare main wellness interface" /> <br/><br/> <img src="EmoCareChatUI.png" width="95%" alt="EmoCare chat and conversation interface" /> </td>
+<!-- RIGHT COLUMN: SINGLE VERTICAL SIDEBAR IMAGE -->
+<td width="35%" align="center">
+  <img src="EmoCareSidebar.png" width="95%" alt="EmoCare sidebar with music, journal upload, and tools" />
+</td>
+
+---
+
 ## 🛠️ Installation & Setup
 
 ### 1️⃣ Clone the Repository
@@ -121,17 +133,6 @@ When the user selects **Stressed / Overwhelmed**, EmoCare highlights:
   <b>Stressed</b> → 🏃 Move your body – even 60 seconds counts
 </div>
 ```
-
----
-🖼️ App Interface Preview
-
-A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness experience.
-
-<table> <tr> <!-- LEFT COLUMN: TWO UI IMAGES STACKED --> <td width="65%" align="center"> <img src="EmoCareUI.png" width="95%" alt="EmoCare main wellness interface" /> <br/><br/> <img src="EmoCareChatUI.png" width="95%" alt="EmoCare chat and conversation interface" /> </td>
-<!-- RIGHT COLUMN: SINGLE VERTICAL SIDEBAR IMAGE -->
-<td width="35%" align="center">
-  <img src="assets/screenshots/EmoCareSidebar.png" width="95%" alt="EmoCare sidebar with music, journal upload, and tools" />
-</td>
 
 ---
 
