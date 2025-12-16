@@ -1,5 +1,4 @@
 streamlit
-sounddevice
 numpy
 scipy
 ffmpeg-python
