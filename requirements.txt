@@ -10,3 +10,4 @@ matplotlib
 wordcloud
 scikit-learn
 gensim
+soundfile
