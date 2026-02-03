@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import cv2
+import time
 from cProfile import label
 import streamlit as st
 import os
 import re
-import time
 import textwrap
 from datetime import datetime
 from typing import Optional
@@ -33,7 +34,6 @@ try:
 except Exception:
     sd = None
     SOUNDDEVICE_OK = False
-
 
 try:
     from elevenlabs.client import ElevenLabs
@@ -122,6 +122,7 @@ EXTRA_COMPASS_LINES = [
     ("Impatient", "Reflect on progress – you're further than you feel 🧭"),
 ]
 
+
 def render_action_compass(current_mood: str):
     st.markdown("#### 🌈 Action Compass")
     st.caption("  Just a gentle nudge, not a rule 🌱")
@@ -150,8 +151,8 @@ def render_action_compass(current_mood: str):
             unsafe_allow_html=True,
         )
 
-# ------------------ Mini-game: Calm Quest ------------------
 
+# ------------------ Mini-game: Calm Quest ------------------
 def run_calm_quest():
     st.markdown("## 🎮 Calm Quest (60 seconds)")
     st.caption("A tiny reset for your mind + body. You can stop anytime.")
@@ -303,7 +304,6 @@ def load_css(file_name="wellness.css"):
     except FileNotFoundError:
         st.warning(f"CSS file '{file_name}' not found. Using default styling.")
 
-
 load_css()
 
 # ---------- ENV & CLIENTS ----------
@@ -320,6 +320,7 @@ if ELEVENLABS_API_KEY and ElevenLabs:
     except Exception as e:
         st.warning(f"ElevenLabs client initialization failed. Voice features disabled. ({e})")
         elevenlabs_client = None
+
 
 # ---------- LLM helpers ----------
 def getTextLLM_system(system_prompt, user_text):
@@ -339,6 +340,7 @@ def getTextLLM_system(system_prompt, user_text):
         return completion.choices[0].message.content
     except Exception as e:
         return f"LLM Error: Could not generate response. ({e})"
+
 
 # ---------- Crisis detection & Core wellness response ----------
 CRISIS_KEYWORDS = [
@@ -402,6 +404,7 @@ Tone & style:
     response = getTextLLM_system(system_prompt, user_input)
     return response, []
 
+
 # ---------- PDF processing helpers ----------
 def extract_text_from_pdf(file) -> str:
     try:
@@ -452,15 +455,13 @@ def generate_wordcloud(text: str):
     except Exception as e:
         st.error(f"Error generating word cloud: {str(e)}")
 
-# ---------- AUDIO HELPERS (voice mode) ----------
 
+# ---------- AUDIO HELPERS (voice mode) ----------
 def record_voice_to_wav(seconds: int = 10, sample_rate: int = 16000) -> Optional[str]:
-     # ✅ Guard (must be indented inside the function)
     if (not SOUNDDEVICE_OK) or (not SOUNDFILE_OK):
         st.error("Voice recording isn't available in this environment.")
         return None
 
-    """Records audio and returns the temporary file path."""
     try:
         if st.session_state.get('recording_active', False):
             sd.stop()
@@ -469,15 +470,15 @@ def record_voice_to_wav(seconds: int = 10, sample_rate: int = 16000) -> Optional
 
         st.info("🎙️ Recording... please speak.")
         sd.stop()
-        
+
         st.session_state.recording_active = True
-        
-        audio = sd.rec(int(seconds * sample_rate), 
-                       samplerate=sample_rate, 
-                       channels=1, 
+
+        audio = sd.rec(int(seconds * sample_rate),
+                       samplerate=sample_rate,
+                       channels=1,
                        device=st.session_state.get("audio_input_device", None))
         sd.wait()
-        
+
         st.session_state.recording_active = False
         audio = np.squeeze(audio)
 
@@ -485,7 +486,7 @@ def record_voice_to_wav(seconds: int = 10, sample_rate: int = 16000) -> Optional
         sf.write(tmp.name, audio, sample_rate)
         st.session_state.current_recording_path = tmp.name
         return tmp.name
-        
+
     except Exception as e:
         st.session_state.recording_active = False
         st.error(f"Recording failed: {e}")
@@ -493,27 +494,22 @@ def record_voice_to_wav(seconds: int = 10, sample_rate: int = 16000) -> Optional
 
 
 def elevenlabs_stt(wav_path: str) -> str:
-    """
-    FIXED: Speech-to-text using ElevenLabs with correct model ID.
-    """
     if not elevenlabs_client:
         st.warning("STT not configured (ElevenLabs client unavailable).")
         return ""
-    
+
     if not os.path.exists(wav_path):
         st.error(f"Audio file not found: {wav_path}")
         return ""
-    
+
     try:
         with open(wav_path, "rb") as f:
-            # CRITICAL FIX: Use the correct model ID "scribe_v1"
             transcription_obj = elevenlabs_client.speech_to_text.convert(
                 file=f,
-                model_id="scribe_v1",  # Correct model
+                model_id="scribe_v1",
                 language_code="en",
             )
-        
-        # Extract text from response
+
         if hasattr(transcription_obj, "text"):
             transcribed_text = transcription_obj.text.strip()
             if not transcribed_text:
@@ -523,7 +519,7 @@ def elevenlabs_stt(wav_path: str) -> str:
         else:
             st.error("Unexpected STT response format.")
             return ""
-            
+
     except Exception as e:
         st.error(f"STT error: {e}")
         import traceback
@@ -532,37 +528,32 @@ def elevenlabs_stt(wav_path: str) -> str:
 
 
 def elevenlabs_tts_bytes(text: str) -> bytes:
-    """
-    FIXED: Text-to-speech using ElevenLabs with proper stream handling.
-    """
     if not elevenlabs_client:
         st.warning("TTS not configured (ElevenLabs client unavailable).")
         return b""
-    
+
     if not text.strip():
         return b""
-    
+
     try:
         audio_result = elevenlabs_client.text_to_speech.convert(
             text=text,
-            voice_id="pNInz6obpgDQGcFmaJgB", 
+            voice_id="pNInz6obpgDQGcFmaJgB",
             model_id="eleven_multilingual_v2",
             output_format="mp3_44100_128",
         )
-        
-        # CRITICAL FIX: Handle both bytes and generator streams
+
         if isinstance(audio_result, bytes):
             audio_bytes = audio_result
         else:
-            # Join chunks from generator
             audio_bytes = b"".join(chunk for chunk in audio_result)
-        
+
         if not audio_bytes:
             st.warning("TTS returned empty audio.")
             return b""
-            
+
         return audio_bytes
-        
+
     except Exception as e:
         st.error(f"TTS error: {e}")
         import traceback
@@ -613,6 +604,14 @@ if "audio_output_device" not in st.session_state:
     st.session_state.audio_output_device = None
 if "audio_applied" not in st.session_state:
     st.session_state.audio_applied = False
+if "camera_on" not in st.session_state:
+    st.session_state.camera_on = False
+if "frame_count" not in st.session_state:
+    st.session_state.frame_count = 0
+if "last_emotion" not in st.session_state:
+    st.session_state.last_emotion = None
+if "last_conf" not in st.session_state:
+    st.session_state.last_conf = 0.0
 
 
 # ---------- SIDEBAR ----------
@@ -682,6 +681,7 @@ with st.sidebar:
         st.session_state.uploaded_pdf_text = None
         st.session_state.pdf_filename = None
 
+
 # ================== MAIN CONTENT: CENTER + RIGHT PANEL ==================
 center_col, right_col = st.columns([2.7, 1.0], gap="large")
 
@@ -742,6 +742,164 @@ with center_col:
 
     st.markdown("---")
 
+    # ------------------ CAMERA SECTION ------------------
+    st.subheader("📷 Camera (Face Box + Emotion)")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Start Camera (10s)", key="start_camera_btn"):
+            st.session_state.camera_on = True
+    with col2:
+        if st.button("Stop Camera", key="stop_camera_btn"):
+            st.session_state.camera_on = False
+
+    frame_placeholder = st.empty()
+    status_placeholder = st.empty()
+
+    if st.session_state.camera_on:
+        yunet_path = "models/face_detection_yunet_2023mar.onnx"
+        emotion_model_path = "models/emotion-ferplus-8.onnx"
+
+        if not os.path.exists(yunet_path):
+            st.error(f"YuNet model file not found: {yunet_path}")
+            st.info("Place the file at: models/face_detection_yunet_2023mar.onnx")
+        elif not os.path.exists(emotion_model_path):
+            st.error(f"Emotion model file not found: {emotion_model_path}")
+            st.info("Place the file at: models/emotion-ferplus-8.onnx")
+        else:
+            # Use V4L2 backend (often more reliable on Jetson for USB webcams)
+            cap = cv2.VideoCapture(0, cv2.CAP_V4L2)
+
+            # Reduce load for smoother preview
+            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+
+            # Ask webcam for MJPG (often faster)
+            try:
+                cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
+            except Exception:
+                pass
+
+            # Reduce buffering lag (not supported on all builds, safe to try)
+            try:
+                cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+            except Exception:
+                pass
+
+            if not cap.isOpened():
+                st.error("Could not open webcam. Check Docker device access (/dev/video0).")
+            else:
+                detector = cv2.FaceDetectorYN.create(
+                    yunet_path, "",
+                    (320, 320),
+                    score_threshold=0.7,
+                    nms_threshold=0.3,
+                    top_k=5000
+                )
+
+                # Emotion model (FER+)
+                emotion_net = cv2.dnn.readNetFromONNX(emotion_model_path)
+                emotion_labels = [
+                    "neutral",
+                    "happiness",
+                    "surprise",
+                    "sadness",
+                    "anger",
+                    "disgust",
+                    "fear",
+                    "contempt"
+                ]
+
+                start_time = time.time()
+                status_placeholder.info("Camera running for 10 seconds...")
+
+                while st.session_state.camera_on and (time.time() - start_time < 10):
+                    ret, frame = cap.read()
+                    if not ret or frame is None:
+                        st.warning("Failed to read frame from webcam.")
+                        break
+
+                    # Always increment frame count
+                    st.session_state.frame_count += 1
+                    do_emotion = (st.session_state.frame_count % 5 == 0)  # every 5th frame
+
+                    # --- Face detection (always) ---
+                    h, w = frame.shape[:2]
+                    detector.setInputSize((w, h))
+                    _, faces = detector.detect(frame)
+
+                    # Draw face boxes (always, if any)
+                    best_face = None  # (x,y,bw,bh) of largest face
+                    if faces is not None:
+                        boxes = [tuple(map(int, f[:4])) for f in faces]
+                        for (x, y, bw, bh) in boxes:
+                            cv2.rectangle(frame, (x, y), (x + bw, y + bh), (0, 255, 0), 2)
+
+                        best_face = max(boxes, key=lambda b: b[2] * b[3])
+
+                    # --- Emotion inference (throttled) ---
+                    detected_emotion = None
+                    emotion_conf = 0.0
+
+                    if do_emotion and best_face is not None:
+                        x, y, bw, bh = best_face
+
+                        # Clamp crop area
+                        x0 = max(0, x)
+                        y0 = max(0, y)
+                        x1 = min(w, x + bw)
+                        y1 = min(h, y + bh)
+
+                        face = frame[y0:y1, x0:x1]
+                        if face.size > 0:
+                            gray = cv2.cvtColor(face, cv2.COLOR_BGR2GRAY)
+                            cv2.imwrite("temp_full_face.jpg", gray)
+                            gray = cv2.resize(gray, (64, 64))
+                            cv2.imwrite("temp_cropped_face.jpg", gray)
+                            
+                            print("min/max range:", np.min(gray), np.max(gray))
+                            blob = gray.astype("float32").reshape(1, 1, 64, 64)
+                            
+                            
+                            emotion_net.setInput(blob)
+                            scores = emotion_net.forward().reshape(-1)
+
+                            # softmax
+                            exp = np.exp(scores - np.max(scores))
+                            probs = exp / exp.sum()
+
+                            idx = int(np.argmax(probs))
+                            detected_emotion = emotion_labels[idx]
+                            emotion_conf = float(probs[idx])
+
+                            # store last known emotion so UI can display even between inference frames
+                            st.session_state.last_emotion = detected_emotion
+                            st.session_state.last_conf = emotion_conf
+
+                    # Put emotion label (always show last known)
+                    if st.session_state.last_emotion:
+                        label_txt = f"{st.session_state.last_emotion} ({st.session_state.last_conf:.2f})"
+                        cv2.putText(
+                            frame, label_txt,
+                            (10, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.8,
+                            (0, 255, 255),
+                            2
+                        )
+
+                    # Show frame (BGR is fine if you pass channels="BGR")
+                    frame_placeholder.image(frame, channels="BGR")
+
+                    # small sleep to avoid maxing CPU
+                    time.sleep(0.03)
+
+                cap.release()
+                st.session_state.camera_on = False
+                status_placeholder.success("Camera session complete (5 seconds).")
+
+    st.markdown("---")
+
     # ================= CONVERSATION HISTORY =================
     st.subheader("💬 Conversation History")
     if st.session_state.conversation_history:
@@ -769,7 +927,7 @@ with center_col:
     with c2:
         if st.button("🎤 Voice Mode", use_container_width=True):
             st.session_state.input_mode = "voice"
-            
+
     st.markdown("---")
 
     # ================= TEXT MODE =================
@@ -836,8 +994,8 @@ with center_col:
                 )
 
         record_seconds = st.slider(
-            "Recording duration (seconds)", 
-            5, 60, 10, 
+            "Recording duration (seconds)",
+            5, 60, 10,
             disabled=st.session_state.recording_active or not elevenlabs_client
         )
 
@@ -858,7 +1016,7 @@ with center_col:
                         if path_to_clean and os.path.exists(path_to_clean):
                             os.remove(path_to_clean)
                         st.session_state.current_recording_path = None
-                    st.rerun() 
+                    st.rerun()
             else:
                 if st.button("🎙️ Record Voice", type="primary", use_container_width=True, disabled=not elevenlabs_client):
                     if not elevenlabs_client:
@@ -866,15 +1024,15 @@ with center_col:
                     else:
                         st.session_state.last_voice_wav_path = None
                         st.session_state.voice_ready_to_send = False
-                        
+
                         wav_path = record_voice_to_wav(record_seconds)
-                        
+
                         if wav_path:
                             st.session_state.last_voice_wav_path = wav_path
                             st.session_state.voice_ready_to_send = True
-                            st.session_state.recording_active = False 
+                            st.session_state.recording_active = False
                             st.success("Recording complete. Review it below, then press Send Voice.")
-                        
+
                         st.rerun()
 
         with col_send:
@@ -1022,7 +1180,7 @@ with right_col:
 
                 st.session_state.audio_input_device = in_id
                 st.session_state.audio_output_device = out_id
-                
+
                 current_in, current_out = sd.default.device if isinstance(sd.default.device, (list, tuple)) else (None, None)
                 sd.default.device = (
                     in_id if in_id is not None else current_in,

@@ -1,215 +1,184 @@
-/* ========== EmoCare Minimal Theme CSS ========== */
+/* ========== 1. GLOBAL LAYOUT & TYPOGRAPHY (Minimal) ========== */
+
+/* Import Comfortaa font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;600;700&display=swap');
 
-html, body, .stApp { height: 100%; }
+html, body, .stApp {
+    height: 100%; 
+}
 
 body, p, label,
 h1, h2, h3, h4, h5, h6,
 div, input, textarea,
 li, a, small, strong, em {
-  font-family: 'Source Sans 3', system-ui, -apple-system, "Segoe UI", sans-serif !important;
+  font-family: 'Source Sans 3', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
 }
 
-/* App background */
+/* Protect Streamlit Material Symbols icons */
+[class*="material-symbols"],
+.material-icons {
+  font-family: "Material Symbols Rounded" !important;
+}
+
+/* 2. MAIN PAGE BACKGROUND (Overrides black BG) */
 .stApp, body {
-  background: #CE7E5A !important; /* terracotta */
+    background: #CE7E5A !important; /* Light Terracotta/Peach */
 }
 
-/* ================= SIDEBAR ================= */
+/* Sidebar Background */
 section[data-testid="stSidebar"] {
-  background: #F9E7B2;            /* soft yellow */
-  border-right: 1px solid #735557;
+    background: #F9E7B2;   /* soft yellow */
+    border-right: 1px solid #735557; 
 }
 
-/* Sidebar headings */
+/* Sidebar headings keep theme color */
 section[data-testid="stSidebar"] h2,
 section[data-testid="stSidebar"] h3 {
-  color: #CE7E5A !important;
+    color: #CE7E5A !important;     /* terracotta headings */
 }
 
-/* Sidebar text default */
+/* Sidebar text should be readable (black by default) */
 section[data-testid="stSidebar"] * {
-  color: #000000 !important;
+    color: #000000 !important;     /* all sidebar text is black */
 }
 
-/* Sidebar selectbox: force selected + dropdown text white (your dark select theme) */
+/* All text + icons INSIDE selectboxes (Selected value and dropdown options) */
 section[data-testid="stSidebar"] .stSelectbox div[data-baseweb="select"] * {
-  color: #ffffff !important;
-  fill: #ffffff !important;
+    color: #ffffff !important; /* Forces text inside the dark box to be white */
+    fill: #ffffff !important;
 }
 
-/* Sidebar file uploader: keep text white inside dropzone */
+/* File uploader - ALL text inside the upload box area */
 section[data-testid="stSidebar"] [data-testid="stFileUploader"] [data-testid="stFileUploaderDropzone"] * {
-  color: #ffffff !important;
+    color: #ffffff !important; /* Forces all text in the dark dropzone to be white */
 }
 
-/* ================= MAIN CARD ================= */
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] button {
+    color: #ffffff !important;
+}
+
+section[data-testid="stSidebar"] [data-testid="stFileUploader"] button * {
+    color: #ffffff !important;
+}
+
+/* Main Content Card Container */
 main .block-container {
-  padding: 2rem !important;
-  max-width: 900px;
-  border-radius: 12px;
-  background: #66321f !important; /* dark brown card */
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+    padding: 2rem !important;
+    max-width: 900px;
+    border-radius: 12px;
+    background: #66321f !important;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.15);
+    color: #8f4725 !important;
 }
 
-/* Headings in main area */
+/* Headings in MAIN area */
 h1, h2, h3, h4, h5 {
-  color: #F9E7B2 !important;
+    color: #F9E7B2 !important;
 }
 
-/* ================= BUTTONS ================= */
-.stButton > button {
-  background: #F9E7B2 !important;
-  color: #000000 !important;
-  border-radius: 6px;
-  border: none !important;
-  padding: 0.55rem 1.6rem;
-  font-weight: 700;
+/* Buttons (Primary Action) */
+.stButton>button {
+    background: #F9E7B2;      /* base button color */
+    color: #000000;
+    border-radius: 6px;
+    border: none;
+    padding: 0.55rem 1.6rem;
+    font-weight: 600;
 }
 
-.stButton > button:hover {
-  background: #E8D794 !important;
-  color: #000000 !important;
+/* Button hover — override Streamlit red */
+.stButton>button:hover {
+    background: #E8D794 !important;  /* warm beige hover */
+    color: #000000 !important;
 }
 
-/* ================= TEXTAREA ================= */
+/* Text area styling */
 textarea {
-  border-radius: 6px !important;
-  border: 1px solid #F9E7B2 !important;
-  color: #000000 !important;
-  background: #F9E7B2 !important;
-  box-shadow: none !important;
+    border-radius: 6px !important;
+    border: 1px solid #F9E7B2 !important;
+    color: #000000 !important; 
+    background: #F9E7B2 !important;
+    box-shadow: none;
 }
 
-/* ================= CHAT ================= */
+/* Conversation History message background */
 [data-testid="stChatMessage"] {
-  background-color: #D29F80;
-  border-radius: 10px;
-  margin-bottom: 10px;
-  padding: 6px 10px;
+    background-color: #D29F80; 
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
 }
 
-div[data-testid="stChatMessage"] p {
-  color: #000000 !important;
-}
-
-/* Chat container wrapper */
+/* Chat container block */
 div.element-container:has(div.stChatContainer) {
-  background-color: #F9E7B2;
-  border-radius: 12px;
-  padding: 15px;
-  margin-top: 10px;
+    background-color: #F9E7B2;
+    border-radius: 12px;
+    padding: 15px;
+    margin-top: 10px;
 }
 
-/* ================= AVATAR ================= */
+/* Chat message text */
+div[data-testid="stChatMessage"] p {
+    color: #000000 !important;
+}
+
+/* st.alert text */
+div.stAlert p {
+    color: #ffffff !important;
+}
+
+/* Ensure the button itself stays visible */
+button[kind="header"] {
+    visibility: visible !important;
+}
+
+/* Avatar display styling */
 .avatar-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 20px 30px;
-  background: rgba(255, 255, 255, 0.10);
-  border-radius: 16px;
-  margin: 20px 0;
-  width: 100%;
-  box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    padding: 20px 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin: 20px 0;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
 }
 
 .avatar-image {
-  font-size: 80px;
-  line-height: 1;
-  animation: float 3s ease-in-out infinite;
-  flex-shrink: 0;
+    font-size: 80px;
+    line-height: 1;
+    animation: float 3s ease-in-out infinite;
+    flex-shrink: 0;
 }
 
 .avatar-text {
-  font-size: 1.7rem;
-  font-weight: 800;
-  color: #F9E7B2 !important;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #F9E7B2 !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
-/* Captions on main view */
+/* ===== FIX: Bigger + darker caption text on MAIN screen only ===== */
 div[data-testid="stAppViewContainer"] .stCaption,
 div[data-testid="stAppViewContainer"] [data-testid="stCaptionContainer"],
 div[data-testid="stAppViewContainer"] [data-testid="stMarkdownContainer"] small,
 div[data-testid="stAppViewContainer"] [data-testid="stMarkdownContainer"] p small {
-  font-size: 16px !important;
-  line-height: 1.5 !important;
-  color: #1a0700 !important;
-  font-weight: 900 !important;
-}
-
-/* ================= Compass paint swatches ================= */
-.compass-swatch {
-  position: relative;
-  padding: 12px 14px;
-  margin: 10px 0;
-  border-radius: 16px;
-  color: rgba(249,231,178,0.96);
-  font-weight: 750;
-  line-height: 1.45;
-  z-index: 0;
-}
-
-.compass-swatch::before {
-  content: "";
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 115%;
-  z-index: -1;
-
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(249,231,178,0.14) 0 18px,
-      rgba(249,231,178,0.10) 18px 28px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(249,231,178,0.20),
-      rgba(249,231,178,0.10)
-    );
-
-  border-radius: 18px;
-  opacity: 0.95;
-  box-shadow: 0 10px 22px rgba(0,0,0,0.10);
-}
-
-.compass-swatch.active::before {
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(249,231,178,0.20) 0 18px,
-      rgba(249,231,178,0.14) 18px 28px
-    ),
-    linear-gradient(
-      90deg,
-      rgba(249,231,178,0.28),
-      rgba(249,231,178,0.14)
-    );
-  box-shadow: 0 14px 28px rgba(0,0,0,0.14);
-}
-
-/* Make st.info / st.warning / st.success text readable on your theme */
-div.stAlert p,
-div.stAlert span,
-div.stAlert a {
-  color: #ffffff !important;
-  font-weight: 800 !important;
-}
-
-section[data-testid="stCheckbox"] label {
-  font-weight: 500;
-  color: #F9E7B2;
+    font-size: 15px !important;       /* bigger */
+    line-height: 1.5 !important;
+    color: #3c2016 !important;        /* darker shade */
+    font-weight: 800 !important;
 }
