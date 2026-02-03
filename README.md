@@ -10,6 +10,7 @@
 **Course:** Data 690 – Special Topics in AI  
 **Focus Areas:** Conversational AI · Mental Wellness · Edge AI  
 **Deployment:** Streamlit (Web) + Jetson Nano (Edge-ready)
+**Instructor:** Prof. Levan Sulimanov
 
 ---
 
