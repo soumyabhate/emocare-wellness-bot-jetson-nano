@@ -94,14 +94,15 @@ Place the following files inside a `models/` folder:
 models/
 ├── face_detection_yunet_2023mar.onnx
 └── emotion-ferplus-8.onnx
+```
 
- 🔒 Privacy Note
+🔒 Privacy Note
 
 All emotion inference happens locally on-device. No camera frames are uploaded or stored by EmoCare.
 
 ---
 
-🖼️ App Interface Preview
+### 🖼️ App Interface Preview
 
 A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness experience.
 
@@ -116,6 +117,7 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
 ## 🛠️ Installation & Setup
 
 ### 1️⃣ Clone the Repository
+
 ```bash
 git clone <your-repo-link>
 cd emacare
