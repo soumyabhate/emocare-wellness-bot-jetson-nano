@@ -108,19 +108,30 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
 
 <table>
   <tr>
-    <!-- LEFT COLUMN: TWO UI IMAGES STACKED -->
-    <td width="65%" align="center">
-      <img src="EmoCareLook/EmoCareUI.png" width="90%" alt="EmoCare main wellness interface" />
+    <!-- LEFT COLUMN: MAIN UI + CHAT (LARGER) -->
+    <td width="65%" align="center" valign="top">
+      <img src="EmoCareLook/EmoCareUI.png"
+           width="92%"
+           alt="EmoCare main wellness interface" />
       <br/><br/>
-      <img src="EmoCareLook/EmoCareChatbot.png" width="90%" alt="EmoCare chat and conversation interface" />
+      <img src="EmoCareLook/EmoCareChatbot.png"
+           width="92%"
+           alt="EmoCare chat and conversation interface" />
+    </td>
+    <!-- RIGHT COLUMN: SIDEBAR + CAMERA (COMPACT & BALANCED) -->
+    <td width="35%" align="center" valign="top">
+      <img src="EmoCareLook/EmoCareSidebar.png"
+           width="88%"
+           alt="EmoCare sidebar with music, journal upload, and tools" />
       <br/><br/>
-    <!-- RIGHT COLUMN: SIDEBAR IMAGE STACKED WITH CAMERA OPTION -->
-    <td width="35%" align="center">
-      <img src="EmoCareLook/EmoCareSidebar.png" width="90%" alt="EmoCare sidebar with music, journal upload, and tools" />
-      <img src="EmoCareLook/EmoCareCam.png" width="90%" alt="EmoCare facial emotion detection camera view" />
+      <img src="EmoCareLook/EmoCareCam.png"
+           width="88%"
+           style="max-height: 320px; object-fit: contain;"
+           alt="EmoCare facial emotion detection camera view" />
     </td>
   </tr>
 </table>
+
 
 ---
 
