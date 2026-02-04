@@ -121,11 +121,11 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
     <!-- RIGHT COLUMN: SIDEBAR + CAMERA (COMPACT & BALANCED) -->
     <td width="35%" align="center" valign="top">
       <img src="EmoCareLook/EmoCareSidebar.png"
-           width="88%"
+           width="85%"
            alt="EmoCare sidebar with music, journal upload, and tools" />
       <br/><br/>
       <img src="EmoCareLook/EmoCareCam.png"
-           width="88%"
+           width="85%"
            style="max-height: 320px; object-fit: contain;"
            alt="EmoCare facial emotion detection camera view" />
     </td>
