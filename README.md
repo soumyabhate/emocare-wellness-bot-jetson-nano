@@ -110,14 +110,14 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
   <tr>
     <!-- LEFT COLUMN: TWO UI IMAGES STACKED -->
     <td width="65%" align="center">
-      <img src="EmoCareLook/EmoCareUI.png" width="95%" alt="EmoCare main wellness interface" />
+      <img src="EmoCareLook/EmoCareUI.png" width="90%" alt="EmoCare main wellness interface" />
       <br/><br/>
-      <img src="EmoCareLook/EmoCareChatbot.png" width="95%" alt="EmoCare chat and conversation interface" />
+      <img src="EmoCareLook/EmoCareChatbot.png" width="90%" alt="EmoCare chat and conversation interface" />
       <br/><br/>
     <!-- RIGHT COLUMN: SIDEBAR IMAGE STACKED WITH CAMERA OPTION -->
     <td width="35%" align="center">
-      <img src="EmoCareLook/EmoCareSidebar.png" width="95%" alt="EmoCare sidebar with music, journal upload, and tools" />
-      <img src="EmoCareLook/EmoCareCam.png" width="95%" alt="EmoCare facial emotion detection camera view" />
+      <img src="EmoCareLook/EmoCareSidebar.png" width="90%" alt="EmoCare sidebar with music, journal upload, and tools" />
+      <img src="EmoCareLook/EmoCareCam.png" width="90%" alt="EmoCare facial emotion detection camera view" />
     </td>
   </tr>
 </table>
