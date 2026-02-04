@@ -109,7 +109,7 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
 <table>
   <tr>
     <!-- LEFT COLUMN: MAIN UI + CHAT (LARGER) -->
-    <td width="65%" align="center" valign="top">
+    <td width="60%" align="center" valign="top">
       <img src="EmoCareLook/EmoCareUI.png"
            width="92%"
            alt="EmoCare main wellness interface" />
@@ -119,7 +119,7 @@ A glimpse into EmoCare’s calming, voice-enabled, and user-centric wellness exp
            alt="EmoCare chat and conversation interface" />
     </td>
     <!-- RIGHT COLUMN: SIDEBAR + CAMERA (COMPACT & BALANCED) -->
-    <td width="35%" align="center" valign="top">
+    <td width="30%" align="center" valign="top">
       <img src="EmoCareLook/EmoCareSidebar.png"
            width="85%"
            alt="EmoCare sidebar with music, journal upload, and tools" />
