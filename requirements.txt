@@ -1,7 +1,9 @@
 streamlit
+opencv-python-headless
 sounddevice
 soundfile
 numpy
+pandas
 scipy
 ffmpeg-python
 python-dotenv
